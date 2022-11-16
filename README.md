@@ -40,3 +40,9 @@ Specify different constraints for each extension:
   }
 }
 ```
+
+## License
+
+Copyright © Upscale Software. All rights reserved.
+
+Licensed under the [Apache License, Version 2.0](https://github.com/upscalesoftware/ext-swoole/blob/master/LICENSE.txt).

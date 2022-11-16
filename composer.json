@@ -1,0 +1,13 @@
+{
+    "name": "upscale/ext-swoole",
+    "description": "Wrapper for ext-swoole interchangeable with ext-openswoole",
+    "keywords": ["swoole", "ext-swoole", "openswoole", "ext-openswoole", "Open Swoole", "extension"],
+    "type": "metapackage",
+    "license": "Apache-2.0",
+    "require": {
+        "ext-swoole": "self.version"
+    },
+    "replace": {
+        "upscale/ext-openswoole": "*"
+    }
+}

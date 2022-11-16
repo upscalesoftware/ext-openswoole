@@ -1,0 +1,44 @@
+name: Release Sync
+on:
+  workflow_dispatch:
+
+jobs:
+  check:
+    name: Check releases
+    runs-on: ubuntu-latest
+    outputs:
+      tags: ${{ steps.fetch.outputs.tags }}
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+      - name: Fetch release tags
+        id: fetch
+        run: |
+          ./.github/workflows/fetch_releases.sh 'swoole/swoole-src' > official_releases.json
+          ./.github/workflows/fetch_releases.sh '${{ github.repository }}' > mirrored_releases.json
+          jq -s '.[0] - .[1]' official_releases.json mirrored_releases.json > missing_releases.json
+          jq '.[0:10]' missing_releases.json > recent_releases.json
+          echo "tags<<EOF" >> $GITHUB_OUTPUT
+          cat recent_releases.json >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  release:
+    name: Release ${{ matrix.tag }}
+    needs: check
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        tag: ${{ fromJson(needs.check.outputs.tags) }}
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+      - name: Create release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ matrix.tag }}
+          release_name: ${{ matrix.tag }}

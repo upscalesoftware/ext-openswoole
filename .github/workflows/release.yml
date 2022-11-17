@@ -1,37 +1,36 @@
-name: Release Sync
+name: Release Import
 on:
   workflow_dispatch:
 
 jobs:
-  check:
-    name: Check releases
+  scan:
+    name: Detect releases
     runs-on: ubuntu-latest
     outputs:
-      tags: ${{ steps.fetch.outputs.tags }}
+      releases: ${{ steps.fetch.outputs.releases }}
     steps:
       - name: Checkout source code
         uses: actions/checkout@v2
-      - name: Fetch release tags
+      - name: Fetch releases
         id: fetch
         run: |
           ./.github/workflows/fetch_releases.sh 'swoole/swoole-src' > official_releases.json
           ./.github/workflows/fetch_releases.sh '${{ github.repository }}' > mirrored_releases.json
-          jq -s '.[0] - .[1]' official_releases.json mirrored_releases.json > missing_releases.json
-          jq '.[0:10]' missing_releases.json > recent_releases.json
-          echo "tags<<EOF" >> $GITHUB_OUTPUT
-          cat recent_releases.json >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+          jq -s '.[0] - [ .[1][] as $release | .[0][] | select(.tag_name == $release.tag_name) ]' official_releases.json mirrored_releases.json > pending_releases.json
+          echo 'releases<<~\\~' >> $GITHUB_OUTPUT
+          jq 'reverse | .[0:10]' pending_releases.json >> $GITHUB_OUTPUT
+          echo '~\\~' >> $GITHUB_OUTPUT
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   release:
-    name: Release ${{ matrix.tag }}
-    needs: check
+    name: Release ${{ matrix.release.tag_name }}
+    needs: scan
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        tag: ${{ fromJson(needs.check.outputs.tags) }}
+        release: ${{ fromJson(needs.scan.outputs.releases) }}
     steps:
       - name: Checkout source code
         uses: actions/checkout@v2
@@ -40,5 +39,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ matrix.tag }}
-          release_name: ${{ matrix.tag }}
+          tag_name: ${{ matrix.release.tag_name }}
+          release_name: ${{ matrix.release.name }}
+          draft: ${{ matrix.release.draft }}
+          prerelease: ${{ matrix.release.prerelease }}
+          body: ${{ matrix.release.html_url }}

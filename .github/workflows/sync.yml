@@ -29,6 +29,7 @@ jobs:
     name: Release ${{ matrix.release.tag_name }}
     needs: scan
     runs-on: ubuntu-latest
+    if: ${{ needs.scan.outputs.releases != '' && toJson(fromJson(needs.scan.outputs.releases)) != '[]' }}
     strategy:
       fail-fast: false
       matrix:

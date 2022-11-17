@@ -14,9 +14,9 @@ jobs:
       - name: Fetch releases
         id: fetch
         run: |
-          ./.github/workflows/github_fetch_releases.sh 'swoole/swoole-src' > official_releases.json
-          ./.github/workflows/github_fetch_releases.sh '${{ github.repository }}' > mirrored_releases.json
-          ./.github/workflows/json_array_diff.sh 'tag_name' official_releases.json mirrored_releases.json > pending_releases.json
+          .github/workflows/github_fetch_releases.sh 'swoole/swoole-src' > official_releases.json
+          .github/workflows/github_fetch_releases.sh '${{ github.repository }}' > mirrored_releases.json
+          .github/workflows/json_array_diff.sh 'tag_name' official_releases.json mirrored_releases.json > pending_releases.json
           echo 'releases<<~\\~' >> $GITHUB_OUTPUT
           jq 'reverse | .[0:10]' pending_releases.json >> $GITHUB_OUTPUT
           echo '~\\~' >> $GITHUB_OUTPUT

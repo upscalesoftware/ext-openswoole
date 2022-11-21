@@ -1,4 +1,4 @@
-Swoole ↔ Open Swoole
+Open Swoole ↔ Swoole
 ====================
 
 The split of the Swoole community into [Swoole](https://github.com/swoole/swoole-src) and [Open Swoole](https://github.com/openswoole/swoole-src) projects has left its ecosystem at crossroads:
@@ -17,7 +17,7 @@ They enable PHP projects to support both extensions instead of choosing one or t
 Declare compatibility with both extensions in your `composer.json`:
 ```diff
      "require": {
--        "ext-swoole": "^4.0"
+-        "ext-openswoole": "^4.0"
 +        "upscale/ext-swoole": "^4.0",
 +        "upscale/ext-openswoole": "^4.0"
      }
@@ -27,7 +27,7 @@ Presence of either extension will satisfy the requirements.
 
 ## Versioning
 
-This metapackage mirrors official releases of [swoole/swoole-src](https://github.com/swoole/swoole-src).
+This metapackage mirrors official releases of [openswoole/swoole-src](https://github.com/openswoole/swoole-src).
 They are being tagged automatically.
 
 Specify different constraints for each extension:
@@ -45,4 +45,4 @@ Specify different constraints for each extension:
 
 Copyright © Upscale Software. All rights reserved.
 
-Licensed under the [Apache License, Version 2.0](https://github.com/upscalesoftware/ext-swoole/blob/master/LICENSE.txt).
+Licensed under the [Apache License, Version 2.0](https://github.com/upscalesoftware/ext-openswoole/blob/master/LICENSE.txt).

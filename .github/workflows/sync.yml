@@ -38,12 +38,14 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v3
       - name: Create release
-        uses: actions/create-release@v1
+        run: |
+          echo '{
+              "tag_name": ${{ toJson(matrix.release.tag_name) }},
+              "name": ${{ toJson(matrix.release.name) }},
+              "draft": ${{ toJson(matrix.release.draft) }},
+              "prerelease": ${{ toJson(matrix.release.prerelease) }},
+              "body": ${{ toJson(matrix.release.html_url) }},
+              "make_latest": "legacy"
+            }' | .github/workflows/github_create_release.sh '${{ github.repository }}'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ matrix.release.tag_name }}
-          release_name: ${{ matrix.release.name }}
-          draft: ${{ matrix.release.draft }}
-          prerelease: ${{ matrix.release.prerelease }}
-          body: ${{ matrix.release.html_url }}

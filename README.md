@@ -1,7 +1,7 @@
 Open Swoole ↔ Swoole
 ====================
 
-The split of the Swoole community into [Swoole](https://github.com/swoole/swoole-src) and [Open Swoole](https://github.com/openswoole/swoole-src) projects has left its ecosystem at crossroads:
+The split of the Swoole community into [Swoole](https://github.com/swoole/swoole-src) and [Open Swoole](https://github.com/openswoole/ext-openswoole) projects has left its ecosystem at crossroads:
 either stick with the original PHP extension or switch over to its fork.
 
 Metapackages [upscale/ext-swoole](https://github.com/upscalesoftware/ext-swoole) and [upscale/ext-openswoole](https://github.com/upscalesoftware/ext-openswoole) declare the two extensions as interchangeable.
@@ -27,7 +27,7 @@ Presence of either extension will satisfy the requirements.
 
 ## Versioning
 
-This metapackage mirrors official releases of [openswoole/swoole-src](https://github.com/openswoole/swoole-src).
+This metapackage mirrors official releases of [openswoole/ext-openswoole](https://github.com/openswoole/ext-openswoole).
 They are being tagged automatically.
 
 Specify different constraints for each extension:
